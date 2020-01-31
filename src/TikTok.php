@@ -11,22 +11,22 @@ class TikTok
 
     public function __construct(
         $debug = false,
-        $storagePath = null)
-    {
+        $storagePath = null
+    ) {
         $this->debug = $debug;
         $this->settings = new Settings($storagePath);
     }
 
     public function setAuthKey(
-        $authKey)
-    {
+        $authKey
+    ) {
         $this->authKey = $authKey;
     }
 
     public function setUser(
         $user,
-        $deviceInfo = null)
-    {
+        $deviceInfo = null
+    ) {
         $this->settings->setUser($user);
 
         if ($this->settings->get('openudid') === null || $this->settings->get('iid') === null || $this->settings->get('device_id') === null) {
@@ -56,8 +56,8 @@ class TikTok
     }
 
     public function getCaptcha(
-        $code)
-    {
+        $code
+    ) {
         $response = $this->request('/get')
             ->setBase(2)
             ->skip(true)
@@ -80,8 +80,8 @@ class TikTok
         $id,
         $url1,
         $url2,
-        $posY)
-    {
+        $posY
+    ) {
         $response = $this->request('/captcha')
             ->setBase(200)
             ->skip(true)
@@ -97,8 +97,8 @@ class TikTok
     }
 
     public function verifyCaptcha(
-        $captchaSolution)
-    {
+        $captchaSolution
+    ) {
         $response = $this->request('/verify')
             ->setBase(2)
             ->skip(true)
@@ -126,8 +126,8 @@ class TikTok
         $user,
         $password,
         $deviceInfo = null,
-        $emailLogin = true)
-    {
+        $emailLogin = true
+    ) {
         $this->setUser($user, $deviceInfo);
 
         $request = $this->request('/passport/user/login/')
@@ -140,18 +140,18 @@ class TikTok
 
         if ($emailLogin) {
             $response = $request->addPost('email', Signatures::xorEncrypt($email))
-                                ->getResponse();
+                ->getResponse();
         } else {
             $response = $request->addPost('username', Signatures::xorEncrypt($user))
-                                ->getResponse();
+                ->getResponse();
         }
 
         return new Response\LoginResponse($response);
     }
 
     public function like(
-        $mediaId)
-    {
+        $mediaId
+    ) {
         $response = $this->request('/aweme/v1/commit/item/digg/')
             ->setBase(1)
             ->addParam('aweme_id', $mediaId)
@@ -163,8 +163,8 @@ class TikTok
 
     public function follow(
         $secUserId,
-        $channelId = 3)
-    {
+        $channelId = 3
+    ) {
         $response = $this->request('/aweme/v1/commit/follow/user/')
             ->setBase(1)
             ->addParam('from', 0)
@@ -179,8 +179,8 @@ class TikTok
 
     public function getUserProfile(
         $userId,
-        $secUserId)
-    {
+        $secUserId
+    ) {
         $response = $this->request('/aweme/v1/user/')
             ->setBase(1)
             ->addParam('allow_sell_data', 0)
@@ -195,8 +195,8 @@ class TikTok
 
     public function comment(
         $mediaId,
-        $text)
-    {
+        $text
+    ) {
         $response = $this->request('/aweme/v1/comment/publish/')
             ->setBase(1)
             ->addPost('aweme_id', $mediaId)
@@ -216,8 +216,8 @@ class TikTok
     public function search(
         $query,
         $offset = 0,
-        $count = 10)
-    {
+        $count = 10
+    ) {
         $response = $this->request('/aweme/v1/general/search/single/')
             ->setBase(1)
             ->setEncoding('urlencode')
@@ -239,8 +239,8 @@ class TikTok
         $maxTime = 0,
         $minTime = 0,
         $count = 20,
-        $noticeGroup = 36)
-    {
+        $noticeGroup = 36
+    ) {
         $response = $this->request('/aweme/v1/notice/list/message/')
             ->setBase(1)
             ->addParam('max_time', $maxTime)
@@ -261,11 +261,11 @@ class TikTok
      *
      * @param string $endpoint
      *
-     * @return \InstagramAPI\Request
+     * @return \TikTokAPI\Request
      */
     public function request(
-        $endpoint = '')
-    {
+        $endpoint = ''
+    ) {
         return new Request($this, $endpoint);
     }
 }
